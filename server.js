@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 });
 
 // Require Notes routes
-require('./app/routes/article.routes.js')(app);
+require('./app/routes/manga.routes.js')(app);
 
 // listen for requests
 app.listen(3000, () => {
