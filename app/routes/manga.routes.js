@@ -6,6 +6,11 @@ module.exports = (app) => {
 
     // Retrieve all Notes
     app.get('/mangas', mangas.findAll);
+    app.get('/newest', mangas.findNewest);
+    app.get('/latest', mangas.findLatest);
+    app.get('/completed', mangas.findCompleted);
+    app.get('/top', mangas.findTop);
+    app.get('/manga/:title', mangas.findOne);
 
     // Retrieve a single Note with noteId
     //app.get('/notes/:noteId', notes.findOne);
