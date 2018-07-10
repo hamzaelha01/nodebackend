@@ -14,7 +14,7 @@ exports.findAll = (req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mangareader");
-        dbo.collection("mangas").find({}).limit(100).project({
+        dbo.collection("mangas").find({}).skip(20).limit(10).project({
             _id: 0,
             title: 1,
             views: 1
@@ -110,11 +110,54 @@ exports.findOne = (req, res) => {
 exports.mangaChap = (req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
-        var conditions = req.params.condtions;
-        var options = req.params.options;
+        conditions = req.params.conditions;
+        if (conditions) {
+            var anime = {
+                title: 'A Meal for The Day You Come Back to Life'
+            }
+            var options = {
+                title: 1,
+                "chapters.chapter_title": 1,
+                views: 0,
+                Genres: 1
+            }
+        }
+
         var dbo = db.db('mangareader');
         dbo.collection("mangas").findOne(
-            conditions, options,
+            anime, options,
+            function(err, result) {
+                if (err) throw err;
+                console.log(result);
+                res.json(result);
+                db.close();
+            });
+    });
+}
+
+exports.mangasD = (req, res) => {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        conditions = req.params.conditions;
+        // if (conditions) {
+        //     var anime = {
+        //         label: "newest"
+        //     }
+        //     var options = {
+        //         _id: 0,
+        //         title: 1,
+        //         "chapters.chapter_title": 1,
+        //         Genres: 1
+        //     }
+
+        // }
+        options = req.params.options;
+        skip = req.params.skip;
+        limit = req.params.limit;
+
+        var dbo = db.db('mangareader');
+        dbo.collection("mangas").find(
+            conditions).project(options).skip(skip).limit(limit).toArray(
             function(err, result) {
                 if (err) throw err;
                 console.log(result);
