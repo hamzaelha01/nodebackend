@@ -14,7 +14,11 @@ exports.findAll = (req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mangareader");
-        dbo.collection("mangas").find({}).project({ title: 1, views: 1 }).toArray(function(err, result) {
+        dbo.collection("mangas").find({}).limit(100).project({
+            _id: 0,
+            title: 1,
+            views: 1
+        }).toArray(function(err, result) {
             if (err) throw err;
             console.log(result);
             res.json(result);
@@ -27,7 +31,7 @@ exports.findNewest = (req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mangareader");
-        dbo.collection("mangas").find({ "label": "newest" }).project({ title: 1, views: 1 }).toArray(function(err, result) {
+        dbo.collection("mangas").find({ "label": "newest" }).limit(10).project({ title: 1, views: 1 }).toArray(function(err, result) {
             if (err) throw err;
             console.log(result);
             res.json(result);
@@ -76,7 +80,7 @@ exports.findLatest = (req, res) => {
         var dbo = db.db("mangareader");
         dbo.collection("mangas").find({
             "status": "latest"
-        }).project({
+        }).limit(10).project({
             title: 1,
             views: 1
         }).toArray(function(err, result) {
@@ -100,6 +104,23 @@ exports.findOne = (req, res) => {
             res.json(result);
             db.close();
         });
+    });
+}
+
+exports.mangaChap = (req, res) => {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var conditions = req.params.condtions;
+        var options = req.params.options;
+        var dbo = db.db('mangareader');
+        dbo.collection("mangas").findOne(
+            conditions, options,
+            function(err, result) {
+                if (err) throw err;
+                console.log(result);
+                res.json(result);
+                db.close();
+            });
     });
 }
 

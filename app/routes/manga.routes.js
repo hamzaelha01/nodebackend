@@ -11,6 +11,7 @@ module.exports = (app) => {
     app.get('/completed', mangas.findCompleted);
     app.get('/top', mangas.findTop);
     app.get('/manga/:title', mangas.findOne);
+    app.get('/q/:conditions/:options', mangas.mangaChap);
 
     // Retrieve a single Note with noteId
     //app.get('/notes/:noteId', notes.findOne);
